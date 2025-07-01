@@ -1,24 +1,27 @@
 using System.Security.Claims;
 
-public class CurrentUserMiddleware
+namespace UniBazaarLite.Middlewares
 {
-    private readonly RequestDelegate _next;
-
-    public CurrentUserMiddleware(RequestDelegate next)
+    public class CurrentUserMiddleware
     {
-        _next = next;
-    }
+        private readonly RequestDelegate _next;
 
-    public async Task InvokeAsync(HttpContext context)
-    {
-        var claims = new List<Claim>
+        public CurrentUserMiddleware(RequestDelegate next)
         {
-            new Claim(ClaimTypes.Name, "testuser@university.edu"),
-            new Claim(ClaimTypes.Role, "Student")
-        };
-        var identity = new ClaimsIdentity(claims, "FakeAuth");
-        context.User = new ClaimsPrincipal(identity);
+            _next = next;
+        }
 
-        await _next(context);
+        public async Task InvokeAsync(HttpContext context)
+        {
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.Name, "testuser@university.edu"),
+                new Claim(ClaimTypes.Role, "Student")
+            };
+            var identity = new ClaimsIdentity(claims, "FakeAuth");
+            context.User = new ClaimsPrincipal(identity);
+
+            await _next(context);
+        }
     }
 }
