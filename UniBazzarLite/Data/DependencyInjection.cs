@@ -1,4 +1,4 @@
-﻿namespace UniBazzarLite.Data
+﻿namespace UniBazaarLite.Data
 {
     public static class DependencyInjection
     {

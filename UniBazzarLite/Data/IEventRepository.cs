@@ -1,6 +1,6 @@
-﻿using UniBazzarLite.Models;
+﻿using UniBazaarLite.Models;
 
-namespace UniBazzarLite.Data
+namespace UniBazaarLite.Data
 {
     public interface IEventRepository
     {

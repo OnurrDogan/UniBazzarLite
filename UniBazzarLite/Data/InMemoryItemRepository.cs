@@ -1,7 +1,7 @@
 ﻿using System.Collections.Concurrent;
-using UniBazzarLite.Models;
+using UniBazaarLite.Models;
 
-namespace UniBazzarLite.Data
+namespace UniBazaarLite.Data
 {
     public sealed class InMemoryItemRepository : IItemRepository
     {

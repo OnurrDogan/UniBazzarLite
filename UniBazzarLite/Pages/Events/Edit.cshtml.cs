@@ -1,31 +1,38 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using UniBazzarLite.Data;
-using UniBazzarLite.Models;
+using UniBazaarLite.Data;
+using UniBazaarLite.Filters;
+using UniBazaarLite.Models;
 
-namespace UniBazaarLite.Pages.Events
+namespace UniBazaarLite.Pages.Events;
+
+[Authorize]
+[ServiceFilter(typeof(ValidateEventExistsFilter))]
+public class EditModel : PageModel
 {
-    public class EditModel : PageModel
+    private readonly IEventRepository _repo;
+    public EditModel(IEventRepository repo) => _repo = repo;
+
+    [BindProperty]
+    public Event Event { get; set; } = default!;
+
+    public IActionResult OnGet(Guid id)
     {
-        private readonly IEventRepository _repo;
-        public EditModel(IEventRepository repo) => _repo = repo;
+        Event? e = _repo.Get(id);
+        if (e is null) return NotFound();
+        Event = e;
+        return Page();
+    }
 
-        [BindProperty]
-        public Event? Event { get; set; }
+    public IActionResult OnPost()
+    {
+        if (!ModelState.IsValid) return Page();
 
-        public IActionResult OnGet(Guid id)
-        {
-            Event = _repo.Get(id);
-            return Event is null ? NotFound() : Page();
-        }
+        if (!_repo.Update(Event))
+            return NotFound();
 
-        public IActionResult OnPost()
-        {
-            if (Event is null || !ModelState.IsValid) return Page();
-            if (!_repo.Update(Event)) return NotFound();
-
-            TempData["Message"] = "Event updated!";
-            return RedirectToPage("Index");
-        }
+        TempData["Message"] = "Event updated!";
+        return RedirectToPage("Index");
     }
 }

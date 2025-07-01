@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Collections.Generic;
-using UniBazzarLite.Data;
-using UniBazzarLite.Models;
+using UniBazaarLite.Data;
+using UniBazaarLite.Models;
 
 namespace UniBazaarLite.Pages.Events
 {

@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace UniBazzarLite.Views.Classifieds
+namespace UniBazaarLite.Views.Classifieds
 {
     public class CreateModel : PageModel
     {

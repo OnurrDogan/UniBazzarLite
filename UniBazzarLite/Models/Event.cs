@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace UniBazzarLite.Models
+namespace UniBazaarLite.Models
 {
     public class Event
     {

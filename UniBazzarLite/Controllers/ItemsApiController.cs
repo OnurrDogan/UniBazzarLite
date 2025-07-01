@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.AspNetCore.Mvc;
-using UniBazzarLite.Data;
-using UniBazzarLite.Models;
+using UniBazaarLite.Data;
+using UniBazaarLite.Models;
 
 namespace UniBazaarLite.Controllers
 {

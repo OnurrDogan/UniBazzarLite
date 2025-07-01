@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc.Filters;
 using System.Diagnostics;
 
-namespace UniBazzarLite.Filters
+namespace UniBazaarLite.Filters
 {
     public sealed class LogActivityFilter : IAsyncActionFilter
     {

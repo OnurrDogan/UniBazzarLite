@@ -1,8 +1,7 @@
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace UniBazzarLite.Pages;
-
-public class ContactsModel : PageModel
+namespace UniBazaarLite.Pages;
+public class ContactModel : PageModel
 {
     public void OnGet() { }
 }

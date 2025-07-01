@@ -1,43 +1,47 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using UniBazzarLite.Data;
-using UniBazzarLite.Models;
+using UniBazaarLite.Data;
+using UniBazaarLite.Filters;
+using UniBazaarLite.Models;
 
-namespace UniBazaarLite.Pages.Events
+namespace UniBazaarLite.Pages.Events;
+
+/// <summary>
+/// Herkesin eriþebildiði etkinlik kayýt sayfasý.
+/// </summary>
+[ServiceFilter(typeof(ValidateEventExistsFilter))]
+public class RegisterModel : PageModel
 {
-    public class RegisterModel : PageModel
+    private readonly IEventRepository _repo;
+    public RegisterModel(IEventRepository repo) => _repo = repo;
+
+    public Event Event { get; private set; } = default!;
+
+    [BindProperty]
+    public EventRegistration Registration { get; set; } = new();
+
+    // GET /Events/Register/{id}
+    public IActionResult OnGet(Guid id)
     {
-        private readonly IEventRepository _repo;
-        public RegisterModel(IEventRepository repo) => _repo = repo;
+        Event = _repo.Get(id)!;           // filter null'ý engelledi
+        Registration.EventId = id;
+        return Page();
+    }
 
-        public Event? Event { get; private set; }
+    // POST /Events/Register
+    public IActionResult OnPost()
+    {
+        Event = _repo.Get(Registration.EventId)!;
 
-        [BindProperty]
-        public EventRegistration Registration { get; set; } = new();
+        if (!ModelState.IsValid) return Page();
 
-        public IActionResult OnGet(Guid id)
+        if (!_repo.Register(Event.Id, Registration))
         {
-            Event = _repo.Get(id);
-            if (Event is null) return NotFound();
-
-            Registration.EventId = id;
-            return Page();
+            TempData["Message"] = "Registration failed – event is full or already registered.";
+            return RedirectToPage(new { id = Event.Id });
         }
 
-        public IActionResult OnPost()
-        {
-            Event = _repo.Get(Registration.EventId);
-            if (Event is null) return NotFound();
-
-            if (!ModelState.IsValid) return Page();
-            if (!_repo.Register(Event.Id, Registration))
-            {
-                TempData["Error"] = "Registration failed – event is full or you already registered.";
-                return RedirectToPage(new { id = Event.Id });
-            }
-
-            TempData["Message"] = "Successfully registered!";
-            return RedirectToPage("Index");
-        }
+        TempData["Message"] = "Successfully registered!";
+        return RedirectToPage("Index");
     }
 }

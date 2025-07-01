@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace UniBazaarLite.Views.Classifieds
+namespace UniBazaarLite.Pages.Shared
 {
-    public class DetailsModel : PageModel
+    public class _AlertModel : PageModel
     {
         public void OnGet()
         {

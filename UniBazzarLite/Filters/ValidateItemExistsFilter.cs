@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc;
-using UniBazzarLite.Data;
+using UniBazaarLite.Data;
 
-namespace UniBazzarLite.Filters
+namespace UniBazaarLite.Filters
 {
     public sealed class ValidateItemExistsFilter : IAsyncActionFilter
     {

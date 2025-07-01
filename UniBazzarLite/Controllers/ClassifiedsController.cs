@@ -1,46 +1,54 @@
 ﻿using System;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using UniBazzarLite.Data;
-using UniBazzarLite.Models;
+using UniBazaarLite.Data;
+using UniBazaarLite.Filters;
+using UniBazaarLite.Models;
 
-namespace UniBazaarLite.Controllers
+namespace UniBazaarLite.Controllers;
+
+/// <summary>
+/// MVC tarafı: ilan listeleme, detay ve oluşturma.
+/// </summary>
+[Route("[controller]")]
+public class ClassifiedsController : Controller
 {
-    [Route("[controller]")]
-    public class ClassifiedsController : Controller
+    private readonly IItemRepository _repo;
+
+    public ClassifiedsController(IItemRepository repo) => _repo = repo;
+
+    // GET /Classifieds
+    [HttpGet("")]
+    public IActionResult Index() => View(_repo.GetAll());
+
+    // GET /Classifieds/Details/{id}
+    [HttpGet("Details/{id:guid}")]
+    [ServiceFilter(typeof(ValidateItemExistsFilter))]
+    public IActionResult Details(Guid id)
     {
-        private readonly IItemRepository _repo;
-        public ClassifiedsController(IItemRepository repo) => _repo = repo;
+        var item = _repo.Get(id)!;                // filter sayesinde null olamaz
+        return View(item);
+    }
 
-        // GET /Classifieds
-        [HttpGet("")]
-        public IActionResult Index() => View(_repo.GetAll());
+    // GET /Classifieds/Create
+    [Authorize]
+    [HttpGet("Create")]
+    public IActionResult Create() => View(new ClassifiedItem());
 
-        // GET /Classifieds/Details/{id}
-        [HttpGet("Details/{id:guid}")]
-        public IActionResult Details(Guid id)
-        {
-            var item = _repo.Get(id);
-            return item is null ? NotFound() : View(item);
-        }
+    // POST /Classifieds/Create
+    [Authorize]
+    [HttpPost("Create")]
+    [ValidateAntiForgeryToken]
+    public IActionResult Create(ClassifiedItem model)
+    {
+        if (!ModelState.IsValid) return View(model);
 
-        // GET /Classifieds/Create
-        [HttpGet("Create")]
-        public IActionResult Create() => View(new ClassifiedItem());
+        // sahte kullanıcı bilgisi (middleware'den de alınabilir)
+        model.SellerId = Guid.Parse(User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)!.Value);
+        model.SellerEmail = User.Identity!.Name!;
 
-        // POST /Classifieds/Create
-        [HttpPost("Create")]
-        [ValidateAntiForgeryToken]
-        public IActionResult Create(ClassifiedItem model)
-        {
-            if (!ModelState.IsValid) return View(model);
-
-            // Simüle edilmiş “giriş yapmış kullanıcı”
-            model.SellerId = Guid.Parse("11111111-1111-1111-1111-111111111111");
-            model.SellerEmail = "student@example.edu";
-
-            _repo.Add(model);
-            TempData["Message"] = "Listing published!";
-            return RedirectToAction(nameof(Index));
-        }
+        _repo.Add(model);
+        TempData["Message"] = "Listing published!";
+        return RedirectToAction(nameof(Index));
     }
 }
