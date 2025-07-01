@@ -1,0 +1,56 @@
+﻿@page
+@model UniBazaarLite.Pages.ContactModel
+@{
+    ViewData["Title"] = "Contact";
+}
+
+<h1>Contact Us</h1>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5 class="card-title">University Bazaar Office</h5>
+                <p class="card-text">
+                    <strong>Address:</strong><br />
+                    123 Campus Avenue<br />
+                    Main Building, Room 101<br />
+                    University City, 12345
+                </p>
+                <p class="card-text">
+                    <strong>Phone:</strong> (555) 123-4567<br />
+                    <strong>Email:</strong> info@unibazaar.edu
+                </p>
+                <p class="card-text">
+                    <strong>Office Hours:</strong><br />
+                    Monday - Friday, 9:00 AM - 5:00 PM
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5 class="card-title">Send Us a Message</h5>
+                <form method="post">
+                    <div class="mb-3">
+                        <label asp-for="ContactForm.Name" class="form-label">Your Name</label>
+                        <input asp-for="ContactForm.Name" class="form-control" placeholder="Enter your name" />
+                        <span asp-validation-for="ContactForm.Name" class="text-danger"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="ContactForm.Email" class="form-label">Your Email</label>
+                        <input asp-for="ContactForm.Email" class="form-control" placeholder="Enter your email" />
+                        <span asp-validation-for="ContactForm.Email" class="text-danger"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="ContactForm.Message" class="form-label">Message</label>
+                        <textarea asp-for="ContactForm.Message" class="form-control" rows="4" placeholder="Type your message here..."></textarea>
+                        <span asp-validation-for="ContactForm.Message" class="text-danger"></span>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Send Message</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

@@ -6,7 +6,7 @@ using UniBazaarLite.Models;
 
 namespace UniBazaarLite.Pages.Events;
 
-[Authorize]                       // <<< YENÝ
+[Authorize]
 public class CreateModel : PageModel
 {
     private readonly IEventRepository _repo;

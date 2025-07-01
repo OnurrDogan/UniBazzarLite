@@ -52,6 +52,66 @@ namespace UniBazaarLite.Data
                     PostedAt = DateTime.UtcNow.AddDays(-2),
                     SellerEmail = "tech.seller@university.edu",
                     IsSold = true
+                },
+                new ClassifiedItem
+                {
+                    Id = Guid.NewGuid(),
+                    Title = "Gaming Chair",
+                    Description = "Ergonomic gaming chair with lumbar support. Perfect for long study sessions.",
+                    Price = 200.00m,
+                    Category = "Furniture",
+                    PostedAt = DateTime.UtcNow.AddDays(-4),
+                    SellerEmail = "gamer.student@university.edu"
+                },
+                new ClassifiedItem
+                {
+                    Id = Guid.NewGuid(),
+                    Title = "Chemistry Lab Kit",
+                    Description = "Complete chemistry lab kit with safety equipment. Used for one semester only.",
+                    Price = 75.00m,
+                    Category = "Lab Equipment",
+                    PostedAt = DateTime.UtcNow.AddDays(-6),
+                    SellerEmail = "chem.major@university.edu"
+                },
+                new ClassifiedItem
+                {
+                    Id = Guid.NewGuid(),
+                    Title = "Coffee Maker",
+                    Description = "Dorm-friendly coffee maker. Makes 4 cups, perfect for early morning classes.",
+                    Price = 25.00m,
+                    Category = "Appliances",
+                    PostedAt = DateTime.UtcNow.AddDays(-2),
+                    SellerEmail = "coffee.lover@university.edu"
+                },
+                new ClassifiedItem
+                {
+                    Id = Guid.NewGuid(),
+                    Title = "Psychology Textbook Set",
+                    Description = "Complete set of psychology textbooks from last semester. All in excellent condition.",
+                    Price = 120.00m,
+                    Category = "Books",
+                    PostedAt = DateTime.UtcNow.AddDays(-7),
+                    SellerEmail = "psych.student@university.edu"
+                },
+                new ClassifiedItem
+                {
+                    Id = Guid.NewGuid(),
+                    Title = "Mini Fridge",
+                    Description = "Small dorm refrigerator. Works perfectly, includes freezer compartment.",
+                    Price = 80.00m,
+                    Category = "Appliances",
+                    PostedAt = DateTime.UtcNow.AddDays(-3),
+                    SellerEmail = "dorm.resident@university.edu"
+                },
+                new ClassifiedItem
+                {
+                    Id = Guid.NewGuid(),
+                    Title = "Guitar",
+                    Description = "Acoustic guitar, great for beginners. Includes case and extra strings.",
+                    Price = 100.00m,
+                    Category = "Musical Instruments",
+                    PostedAt = DateTime.UtcNow.AddDays(-1),
+                    SellerEmail = "music.major@university.edu"
                 }
             };
 

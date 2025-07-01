@@ -33,6 +33,8 @@ builder.Services.AddAuthentication("Fake")
 builder.Services.AddAuthorization();
 builder.Services.Configure<SiteOptions>(builder.Configuration.GetSection("Site"));
 
+// Add AdminEmail from User Secrets (final project requirement)
+builder.Configuration.AddUserSecrets<Program>();
 
 var app = builder.Build();
 
