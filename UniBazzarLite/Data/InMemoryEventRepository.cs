@@ -31,5 +31,9 @@ namespace UniBazaarLite.Data
 
         public IEnumerable<EventRegistration> GetRegistrations(Guid eventId) =>
             _events.TryGetValue(eventId, out var ev) ? ev.Registrations : Enumerable.Empty<EventRegistration>();
+
+        public IEnumerable<Event> GetAllEvents() => _events.Values;
+
+        public Event GetEventById(Guid id) => _events.TryGetValue(id, out var ev) ? ev : null;
     }
 }

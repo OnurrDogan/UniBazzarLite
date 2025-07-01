@@ -15,8 +15,8 @@
     @foreach (var ev in Model.Events)
     {
         <tr>
-            <td>@ev.Name</td>
-            <td>@ev.Date.ToString("dd MMM yyyy")</td>
+            <td>@ev.Title</td>
+            <td>@ev.StartsAt.ToString("dd MMM yyyy")</td>
             <td>
                 <a asp-page="Edit" asp-route-id="@ev.Id" class="btn btn-sm btn-warning">Edit</a>
                 <a asp-page="Register" asp-route-id="@ev.Id" class="btn btn-sm btn-success">Register</a>

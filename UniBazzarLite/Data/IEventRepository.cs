@@ -14,5 +14,7 @@ namespace UniBazaarLite.Data
         // Kayıt işlemleri
         bool Register(Guid eventId, EventRegistration reg);         // kapasite kontrolü içerir
         IEnumerable<EventRegistration> GetRegistrations(Guid eventId);
+        IEnumerable<Event> GetAllEvents();
+        Event GetEventById(Guid id);
     }
 }

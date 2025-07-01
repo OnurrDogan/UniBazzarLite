@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using UniBazaarLite.Data;
 using UniBazaarLite.Models;
 
 namespace UniBazaarLite.Pages.Events
