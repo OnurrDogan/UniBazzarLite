@@ -1,6 +1,4 @@
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using System.Collections.Generic;
-using UniBazaarLite.Data;
 using UniBazaarLite.Models;
 
 namespace UniBazaarLite.Pages.Events
@@ -8,10 +6,17 @@ namespace UniBazaarLite.Pages.Events
     public class IndexModel : PageModel
     {
         private readonly IEventRepository _repo;
-        public IndexModel(IEventRepository repo) => _repo = repo;
 
-        public IEnumerable<Event> Events { get; private set; } = [];
+        public IndexModel(IEventRepository repo)
+        {
+            _repo = repo;
+        }
 
-        public void OnGet() => Events = _repo.GetAll();
+        public IEnumerable<Event> Events { get; set; }
+
+        public void OnGet()
+        {
+            Events = _repo.GetAllEvents();
+        }
     }
 }
