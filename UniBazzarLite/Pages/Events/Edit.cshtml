@@ -1,0 +1,18 @@
+﻿@page "{id:guid}"
+@model UniBazaarLite.Pages.Events.EditModel
+@{
+    ViewData["Title"] = "Edit Event";
+}
+<h2>Edit Event</h2>
+
+<form method="post" class="row g-3">
+    <input asp-for="Event.Id" type="hidden" />
+    <!-- Diğer inputlar, Create.cshtml’dekilerle aynı -->
+    @* ... *@
+    <div class="col-12">
+        <button type="submit" class="btn btn-primary">Update</button>
+        <a asp-page="Index" class="btn btn-secondary">Back</a>
+    </div>
+</form>
+
+<partial name="_ValidationScriptsPartial" />

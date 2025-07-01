@@ -1,0 +1,33 @@
+﻿@page
+@model UniBazaarLite.Pages.Events.IndexModel
+@{
+    ViewData["Title"] = "Events";
+}
+<h1>Campus Events</h1>
+
+<a asp-page="Create" class="btn btn-sm btn-primary mb-3">+ New Event</a>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Starts</th>
+            <th>Capacity</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var e in Model.Events)
+        {
+            <tr class="@(e.IsFull ? "table-warning" : "")">
+                <td>@e.Title</td>
+                <td>@e.StartsAt.ToString("g")</td>
+                <td> @(e.Capacity == 0 ? "∞" : $"{e.Registrations.Count}/{e.Capacity}") </td>
+                <td>
+                    <a asp-page="Edit" asp-route-id="@e.Id" class="btn btn-sm btn-outline-secondary">Edit</a>
+                    <a asp-page="Register" asp-route-id="@e.Id" class="btn btn-sm btn-success">Register</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

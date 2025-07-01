@@ -1,0 +1,38 @@
+﻿@model IEnumerable<ClassifiedItem>
+@{
+    ViewData["Title"] = "Classifieds";
+}
+
+<h1>Classified Ads</h1>
+
+<a asp-action="Create" class="btn btn-primary btn-sm mb-3">+ New Listing</a>
+
+<table class="table table-striped align-middle">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Price</th>
+            <th>Posted</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr class="@(item.IsSold ? "table-secondary" : "")">
+                <td>@item.Title</td>
+                <td>@item.Price.ToString("C")</td>
+                <td>@item.PostedAt.ToString("g")</td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@item.Id"
+                       class="btn btn-outline-secondary btn-sm">Details</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@if (TempData["Message"] is string m)
+{
+    <div class="alert alert-success">@m</div>
+}

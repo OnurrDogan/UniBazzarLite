@@ -1,0 +1,27 @@
+﻿using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.AspNetCore.Mvc;
+using UniBazzarLite.Data;
+
+namespace UniBazzarLite.Filters
+{
+    public sealed class ValidateItemExistsFilter : IAsyncActionFilter
+    {
+        private readonly IItemRepository _repo;
+        public ValidateItemExistsFilter(IItemRepository repo) => _repo = repo;
+
+        public async Task OnActionExecutionAsync(ActionExecutingContext context,
+                                                 ActionExecutionDelegate next)
+        {
+            if (context.ActionArguments.TryGetValue("id", out var raw) && raw is Guid id)
+            {
+                if (_repo.Get(id) is null)
+                {
+                    context.Result = new NotFoundResult();
+                    return;
+                }
+            }
+
+            await next();   // doğrulandı – devam et
+        }
+    }
+}
