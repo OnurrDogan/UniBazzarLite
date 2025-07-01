@@ -12,7 +12,7 @@ builder.Services.AddControllersWithViews(options =>
 });
 builder.Services.AddRazorPages(options =>
 {
-    // "Events/Index" sayfasýný "/" rotasýna da baðla
+    // "Events/Index" sayfasÃ½nÃ½ "/" rotasÃ½na da baÃ°la
     options.Conventions.AddPageRoute("/Events/Index", "/");
 });
 builder.Services.AddUniBazaarRepositories();
@@ -27,6 +27,9 @@ builder.Services.Configure<SiteOptions>(builder.Configuration.GetSection("Site")
 builder.Services.AddAuthentication("Fake")
     .AddCookie("Fake", o => o.LoginPath = "/");
 builder.Services.AddAuthorization();
+builder.Services.Configure<SiteOptions>(
+    builder.Configuration.GetSection("SiteOptions"));
+
 
 var app = builder.Build();
 
