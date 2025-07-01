@@ -1,4 +1,11 @@
-﻿@if (TempData["Message"] is string m)
+@{
+    var message = TempData["Message"] as string;
+}
+
+@if (!string.IsNullOrEmpty(message))
 {
-    <div class="alert alert-success text-center">@m</div>
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @message
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
 }
