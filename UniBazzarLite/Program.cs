@@ -8,12 +8,16 @@ var builder = WebApplication.CreateBuilder(args);
 // ----- DI -----
 builder.Services.AddControllersWithViews(options =>
 {
-    options.Filters.Add<LogActivityFilter>();   // global log
+    options.Filters.Add<LogActivityFilter>();         // MVC istekleri
 });
 builder.Services.AddRazorPages(options =>
 {
-    // "Events/Index" sayfasýný "/" rotasýna da baðla
+    // kök URL yönlendirmesi
     options.Conventions.AddPageRoute("/Events/Index", "/");
+})
+.AddMvcOptions(o =>                     // <--  burada
+{
+    o.Filters.Add<LogActivityFilter>(); // Razor Pages istekleri de dâhil
 });
 builder.Services.AddUniBazaarRepositories();
 
@@ -27,8 +31,7 @@ builder.Services.Configure<SiteOptions>(builder.Configuration.GetSection("Site")
 builder.Services.AddAuthentication("Fake")
     .AddCookie("Fake", o => o.LoginPath = "/");
 builder.Services.AddAuthorization();
-builder.Services.Configure<SiteOptions>(
-    builder.Configuration.GetSection("SiteOptions"));
+builder.Services.Configure<SiteOptions>(builder.Configuration.GetSection("Site"));
 
 
 var app = builder.Build();

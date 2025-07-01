@@ -3,25 +3,25 @@
 @{
     ViewData["Title"] = "Register";
 }
-<h2>Register for @Model.Event?.Title</h2>
 
-@if (TempData["Error"] is string err)
-{
-    <div class="alert alert-danger">@err</div>
-}
+<h2>Register for @Model.Event.Title</h2>
 
-<form method="post" class="row g-3">
-    <input type="hidden" asp-for="Registration.EventId" />
+<form asp-page="Register" method="post" class="row g-3">
+    @Html.AntiForgeryToken()
+    <input asp-for="Registration.EventId" type="hidden" />
+
     <div class="col-md-6">
         <label asp-for="Registration.AttendeeName" class="form-label"></label>
         <input asp-for="Registration.AttendeeName" class="form-control" />
         <span asp-validation-for="Registration.AttendeeName" class="text-danger"></span>
     </div>
+
     <div class="col-md-6">
         <label asp-for="Registration.AttendeeEmail" class="form-label"></label>
         <input asp-for="Registration.AttendeeEmail" class="form-control" />
         <span asp-validation-for="Registration.AttendeeEmail" class="text-danger"></span>
     </div>
+
     <div class="col-12">
         <button type="submit" class="btn btn-success">Register</button>
         <a asp-page="Index" class="btn btn-secondary">Cancel</a>

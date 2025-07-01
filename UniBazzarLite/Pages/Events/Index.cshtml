@@ -1,27 +1,54 @@
-@page
+﻿@page
 @model UniBazaarLite.Pages.Events.IndexModel
+@{
+    ViewData["Title"] = "Events";
+}
 
-<h2>Upcoming Events</h2>
+<h1>Campus Events</h1>
 
-<table class="table">
+<a asp-page="Create" class="btn btn-sm btn-primary mb-3">+ New Event</a>
+
+<table class="table table-striped">
     <thead>
         <tr>
             <th>Title</th>
-            <th>Date</th>
-            <th>Actions</th>
+            <th>Starts</th>
+            <th>Capacity</th>
+            <th style="width:160px;"></th>
         </tr>
     </thead>
     <tbody>
-    @foreach (var ev in Model.Events)
-    {
-        <tr>
-            <td>@ev.Title</td>
-            <td>@ev.StartsAt.ToString("dd MMM yyyy")</td>
-            <td>
-                <a asp-page="Edit" asp-route-id="@ev.Id" class="btn btn-sm btn-warning">Edit</a>
-                <a asp-page="Register" asp-route-id="@ev.Id" class="btn btn-sm btn-success">Register</a>
-            </td>
-        </tr>
-    }
+        @foreach (var e in Model.Events)
+        {
+            <tr class="@(e.IsFull ? "table-warning" : "")">
+                <td>@e.Title</td>
+                <td>@e.StartsAt.ToString("g")</td>
+                <td>@(e.Capacity == 0 ? "∞" : $"{e.Registrations.Count}/{e.Capacity}")</td>
+                <td class="text-end">
+                    <a asp-page="Edit" asp-route-id="@e.Id" class="btn btn-sm btn-outline-secondary me-1">Edit</a>
+                    <a asp-page="Register" asp-route-id="@e.Id" class="btn btn-sm btn-success">Register</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
+
+@if (Model.TotalPages > 1)
+{
+    <nav aria-label="page">
+        <ul class="pagination justify-content-center">
+            <li class="page-item @(Model.CurrentPage == 1 ? "disabled" : "")">
+                <a class="page-link" asp-route-page="@(Model.CurrentPage-1)">Prev</a>
+            </li>
+            @for (int i = 1; i <= Model.TotalPages; i++)
+            {
+                <li class="page-item @(i == Model.CurrentPage ? "active" : "")">
+                    <a class="page-link" asp-route-page="@i">@i</a>
+                </li>
+            }
+            <li class="page-item @(Model.CurrentPage == Model.TotalPages ? "disabled" : "")">
+                <a class="page-link" asp-route-page="@(Model.CurrentPage+1)">Next</a>
+            </li>
+        </ul>
+    </nav>
+}

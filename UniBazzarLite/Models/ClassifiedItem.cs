@@ -17,11 +17,8 @@ namespace UniBazaarLite.Models
 
         public DateTime PostedAt { get; set; } = DateTime.UtcNow;
 
-        [Required]
         public Guid SellerId { get; set; }
-
-        [Required, EmailAddress]
-        public string SellerEmail { get; set; } = default!;
+        public string? SellerEmail { get; set; }
 
         [StringLength(50)]
         public string? Category { get; set; }

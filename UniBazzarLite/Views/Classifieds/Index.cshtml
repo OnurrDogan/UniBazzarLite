@@ -1,39 +1,112 @@
-﻿@using UniBazaarLite.Models
-@model IEnumerable<ClassifiedItem>
+﻿@model IEnumerable<UniBazaarLite.Models.ClassifiedItem>
+
 @{
     ViewData["Title"] = "Classifieds";
+
+    int page = ViewData["CurrentPage"] is int c ? c : 1;
+    int total = ViewData["TotalPages"] is int t ? t : 1;
+    string cat = (string)(ViewData["CurrentCat"] ?? "");
 }
 
-<h1>Classified Ads</h1>
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="h3 mb-0">Classified Ads</h1>
+    <a asp-action="Create" class="btn btn-primary">
+        <i class="bi bi-plus"></i> New Listing
+    </a>
+</div>
 
-<a asp-action="Create" class="btn btn-primary btn-sm mb-3">+ New Listing</a>
+<form asp-action="Index" method="get" class="row row-cols-auto g-2 align-items-center mb-3">
+    <label class="col-form-label">Category</label>
+    <div class="col">
+        <select name="category" class="form-select">
+            <option value="" selected="@(""==cat)">All</option>
+            <option value="Books" selected="@(cat=="Books")">Books</option>
+            <option value="Electronics" selected="@(cat=="Electronics")">Electronics</option>
+            <option value="Clothing" selected="@(cat=="Clothing")">Clothing</option>
+            <option value="Other" selected="@(cat=="Other")">Other</option>
+        </select>
+    </div>
+    <div class="col">
+        <button class="btn btn-outline-primary">Filter</button>
+    </div>
+</form>
 
-<table class="table table-striped align-middle">
-    <thead>
-        <tr>
-            <th>Title</th>
-            <th>Price</th>
-            <th>Posted</th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr class="@(item.IsSold ? "table-secondary" : "")">
-                <td>@item.Title</td>
-                <td>@item.Price.ToString("C")</td>
-                <td>@item.PostedAt.ToString("g")</td>
-                <td>
-                    <a asp-action="Details" asp-route-id="@item.Id"
-                       class="btn btn-outline-secondary btn-sm">Details</a>
-                </td>
+@if (!Model.Any())
+{
+    <div class="alert alert-secondary text-center">
+        No listings found.
+    </div>
+}
+else
+{
+    <table class="table table-bordered table-hover align-middle">
+        <thead class="table-light">
+            <tr>
+                <th style="width:36px;"></th>
+                <th>Title</th>
+                <th style="width:120px;">Price</th>
+                <th style="width:180px;">Posted</th>
+                <th style="width:140px;">Category</th>
+                <th style="width:200px;"></th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var i in Model)
+            {
+                <tr class="@(i.IsSold ? "table-secondary" : "")">
+                    <td>
+                        @if (i.IsSold)
+                        {
+                            <span class="badge bg-secondary">Sold</span>
+                        }
+                    </td>
+                    <td>@i.Title</td>
+                    <td>@i.Price.ToString("C")</td>
+                    <td>@i.PostedAt.ToString("g")</td>
+                    <td>@(string.IsNullOrWhiteSpace(i.Category) ? "-" : i.Category)</td>
+                    <td class="text-end">
+                        <a asp-action="Details" asp-route-id="@i.Id" class="btn btn-sm btn-outline-secondary me-1">
+                            <i class="bi bi-eye"></i>
+                        </a>
+                        <a asp-action="Edit" asp-route-id="@i.Id" class="btn btn-sm btn-outline-primary me-1">
+                            <i class="bi bi-pencil"></i>
+                        </a>
+                        <form asp-action="Delete" asp-route-id="@i.Id"
+                              method="post" class="d-inline"
+                              onsubmit="return confirm('Delete this listing?');">
+                            @Html.AntiForgeryToken()
+                            <button class="btn btn-sm btn-outline-danger">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@if (total > 1)
+{
+    <nav class="mt-3">
+        <ul class="pagination justify-content-center">
+            <li class="page-item @(page==1 ? "disabled" : "")">
+                <a class="page-link" asp-route-page="@(page-1)" asp-route-category="@cat">«</a>
+            </li>
+            @for (int i = 1; i <= total; i++)
+            {
+                <li class="page-item @(i==page ? "active" : "")">
+                    <a class="page-link" asp-route-page="@i" asp-route-category="@cat">@i</a>
+                </li>
+            }
+            <li class="page-item @(page==total ? "disabled" : "")">
+                <a class="page-link" asp-route-page="@(page+1)" asp-route-category="@cat">»</a>
+            </li>
+        </ul>
+    </nav>
+}
 
 @if (TempData["Message"] is string m)
 {
-    <div class="alert alert-success">@m</div>
+    <div class="alert alert-success mt-3">@m</div>
 }

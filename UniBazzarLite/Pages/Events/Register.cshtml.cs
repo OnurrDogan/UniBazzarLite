@@ -1,50 +1,42 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using UniBazaarLite.Data;
+using UniBazaarLite.Filters;
 using UniBazaarLite.Models;
 
-namespace UniBazaarLite.Pages.Events
+namespace UniBazaarLite.Pages.Events;
+
+[ServiceFilter(typeof(ValidateEventExistsFilter))]
+public class RegisterModel : PageModel
 {
-    public class RegisterModel : PageModel
+    private readonly IEventRepository _repo;
+    public RegisterModel(IEventRepository repo) => _repo = repo;
+
+    public Event Event { get; private set; } = default!;
+
+    [BindProperty]
+    public EventRegistration Registration { get; set; } = new();
+
+    public IActionResult OnGet(Guid id)
     {
-        private readonly IEventRepository _eventRepository;
+        Event = _repo.Get(id)!;                 // filtre null'ı engelledi
+        Registration.EventId = id;
+        return Page();
+    }
 
-        public RegisterModel(IEventRepository eventRepository)
-        {
-            _eventRepository = eventRepository;
-        }
+    public IActionResult OnPost()
+    {
+        // Etkinliği her hâlükârda yükle – ModelState geçersizse de lazım
+        Event = _repo.Get(Registration.EventId)!;
 
-        [BindProperty]
-        public EventRegistration Registration { get; set; }
+        if (!ModelState.IsValid) return Page();
 
-        public Event Event { get; set; }
+        var ok = _repo.Register(Event.Id, Registration);   // kapasite + duplicate kontrolü
 
-        public IActionResult OnGet(Guid id)
-        {
-            Event = _eventRepository.GetEventById(id);
+        TempData["Message"] = ok
+            ? "Successfully registered!"
+            : "Registration failed – event is full or you already registered.";
 
-            if (Event == null)
-            {
-                TempData["Error"] = "Event not found.";
-                return RedirectToPage("Index");
-            }
-
-            Registration = new EventRegistration { EventId = id };
-            return Page();
-        }
-
-        public IActionResult OnPost()
-        {
-            if (!ModelState.IsValid)
-            {
-                TempData["Error"] = "Lütfen tüm gerekli alanları doldurun.";
-                return Page();
-            }
-
-            // TODO: Kayıt işlemini buraya ekle, örn: _eventRepository.Register(Registration);
-
-            TempData["Message"] = "Etkinliğe kaydınız başarıyla tamamlandı!";
-            return RedirectToPage("Index");
-        }
+        return RedirectToPage("Index");
     }
 }

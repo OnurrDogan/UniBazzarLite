@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
 using UniBazaarLite.Data;
 using UniBazaarLite.Models;
+using UniBazaarLite.ViewModels;
 
 namespace UniBazaarLite.Controllers
 {
@@ -26,15 +28,22 @@ namespace UniBazaarLite.Controllers
 
         // POST /api/items
         [HttpPost]
-        public IActionResult Post([FromBody] ClassifiedItem dto)
+        public IActionResult Post([FromBody] ClassifiedItemCreateDto dto)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
-            dto.SellerId = Guid.Parse("11111111-1111-1111-1111-111111111111");
-            dto.SellerEmail = "student@example.edu";
+            var item = new ClassifiedItem
+            {
+                Title = dto.Title,
+                Description = dto.Description,
+                Price = dto.Price,
+                Category = dto.Category,
+                SellerId = Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value),
+                SellerEmail = User.Identity!.Name
+            };
 
-            _repo.Add(dto);
-            return CreatedAtAction(nameof(Get), new { id = dto.Id }, dto);
+            _repo.Add(item);
+            return CreatedAtAction(nameof(Get), new { id = item.Id }, item);
         }
     }
 }
