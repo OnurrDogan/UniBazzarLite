@@ -35,4 +35,13 @@ public class EditModel : PageModel
         TempData["Message"] = "Event updated!";
         return RedirectToPage("Index");
     }
+
+    public IActionResult OnPostDelete()
+    {
+        if (Event == null || Event.Id == Guid.Empty)
+            return NotFound();
+        _repo.Delete(Event.Id);
+        TempData["Message"] = "Event deleted.";
+        return RedirectToPage("Index");
+    }
 }

@@ -3,16 +3,20 @@ using UniBazaarLite.Models;
 
 namespace UniBazaarLite.Data
 {
+    // In-memory repository for events (no database needed!)
     public sealed class InMemoryEventRepository : IEventRepository
     {
+        // Stores all events in a thread-safe dictionary
         private readonly ConcurrentDictionary<Guid, Event> _events = new();
 
+        // Constructor: adds some sample events when the app starts
         public InMemoryEventRepository()
         {
             // Initialize with dummy data
             InitializeDummyData();
         }
 
+        // Adds some example events for demo/testing
         private void InitializeDummyData()
         {
             var events = new[]
@@ -75,33 +79,43 @@ namespace UniBazaarLite.Data
             }
         }
 
+        // Returns all events, sorted by start date
         public IEnumerable<Event> GetAll() => _events.Values.OrderBy(e => e.StartsAt);
 
+        // Get a single event by ID
         public Event? Get(Guid id) => _events.TryGetValue(id, out var e) ? e : null;
 
+        // Add a new event
         public void Add(Event entity) => _events[entity.Id] = entity;
 
+        // Update an existing event
         public bool Update(Event entity) =>
             _events.TryGetValue(entity.Id, out var _) && _events.TryUpdate(entity.Id, entity, _events[entity.Id]);
 
+        // Delete an event by ID
         public bool Delete(Guid id) => _events.TryRemove(id, out _);
 
+        // Register a student for an event
         public bool Register(Guid eventId, EventRegistration reg)
         {
             if (!_events.TryGetValue(eventId, out var ev)) return false;
-            lock (ev)                      // kapasite ve çifte kayıt koruması
+            lock (ev) // lock so two people can't register at the same time
             {
+                // Check if event is full or already registered
                 if (ev.IsFull || ev.Registrations.Any(r => r.AttendeeEmail == reg.AttendeeEmail)) return false;
                 ev.Registrations.Add(reg);
                 return true;
             }
         }
 
+        // Get all registrations for an event
         public IEnumerable<EventRegistration> GetRegistrations(Guid eventId) =>
             _events.TryGetValue(eventId, out var ev) ? ev.Registrations : Enumerable.Empty<EventRegistration>();
 
+        // (Legacy) Get all events
         public IEnumerable<Event> GetAllEvents() => _events.Values;
 
+        // (Legacy) Get event by ID
         public Event GetEventById(Guid id) => _events.TryGetValue(id, out var ev) ? ev : null;
     }
 }

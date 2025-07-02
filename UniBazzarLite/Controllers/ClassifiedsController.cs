@@ -11,6 +11,7 @@ using UniBazaarLite.ViewModels;
 
 namespace UniBazaarLite.Controllers;
 
+// Controller for the Classifieds system (MVC style)
 [Route("[controller]")]
 public class ClassifiedsController : Controller
 {
@@ -24,11 +25,13 @@ public class ClassifiedsController : Controller
     }
 
     // GET /Classifieds?page=1&category=Books
+    // Shows a paginated, optionally filtered list of items
     [HttpGet("")]
     public IActionResult Index(int page = 1, string? category = null)
     {
         int pageSize = _opt.Value.MaxItemsPerPage;
 
+        // Filter by category if provided
         var source = string.IsNullOrWhiteSpace(category)
                      ? _repo.GetAll()
                      : _repo.ByCategory(category);
@@ -47,20 +50,23 @@ public class ClassifiedsController : Controller
     }
 
     // GET /Classifieds/Details/{id}
+    // Shows details for a single item
     [HttpGet("Details/{id:guid}")]
     [ServiceFilter(typeof(ValidateItemExistsFilter))]
     public IActionResult Details(Guid id)
     {
-        var item = _repo.Get(id)!;      // filtre null'ı engelledi
+        var item = _repo.Get(id)!;      // filter ensures not null
         return View(item);
     }
 
     // GET /Classifieds/Create
+    // Shows the form to create a new item (must be logged in)
     [Authorize]
     [HttpGet("Create")]
     public IActionResult Create() => View(new ClassifiedItem());
 
     // POST /Classifieds/Create
+    // Handles form submission for new item
     [Authorize]
     [HttpPost("Create")]
     [ValidateAntiForgeryToken]
@@ -68,6 +74,7 @@ public class ClassifiedsController : Controller
     {
         if (!ModelState.IsValid) return View(model);
 
+        // Set seller info from the current user
         var idClaim = User.FindFirst(ClaimTypes.NameIdentifier);
         model.SellerId = idClaim is null ? Guid.Empty : Guid.Parse(idClaim.Value);
         model.SellerEmail = User.Identity!.Name ?? "unknown@local";
@@ -78,6 +85,7 @@ public class ClassifiedsController : Controller
     }
 
     // GET /Classifieds/Edit/{id}
+    // Shows the form to edit an item (must be logged in)
     [Authorize]
     [HttpGet("Edit/{id:guid}")]
     [ServiceFilter(typeof(ValidateItemExistsFilter))]
@@ -88,6 +96,7 @@ public class ClassifiedsController : Controller
     }
 
     // POST /Classifieds/Edit
+    // Handles form submission for editing an item
     [Authorize]
     [HttpPost("Edit")]
     [ValidateAntiForgeryToken]
@@ -101,6 +110,7 @@ public class ClassifiedsController : Controller
     }
 
     // POST /Classifieds/Delete/{id}
+    // Handles deletion of an item (must be logged in)
     [Authorize]
     [HttpPost("Delete/{id:guid}")]
     [ValidateAntiForgeryToken]

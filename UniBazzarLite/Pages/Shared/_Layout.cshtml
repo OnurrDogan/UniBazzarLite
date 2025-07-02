@@ -1,40 +1,59 @@
 @inject Microsoft.Extensions.Options.IOptions<UniBazaarLite.ViewModels.SiteOptions> Site
 
+<!--
+    _Layout.cshtml
+    This is the main layout for our UniBazaar Lite project.
+    It sets up the navbar, shared styles, and the main page structure.
+    Written by a university student for the final project :)
+-->
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
-    <title>@Site.Value.OfficialName</title>
+    <title>@Site.Value.OfficialName</title> <!-- Site name from config -->
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- Bootstrap CSS for styling -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons for nice icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <!-- Our custom site CSS -->
     <link href="~/css/site.css" rel="stylesheet">
 </head>
 <body>
+    <!-- Navbar: Main navigation bar for the site -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4">
         <div class="container">
-            <a class="navbar-brand fw-bold" asp-page="/Index">@Site.Value.OfficialName</a>
+            <!-- Clicking the site name goes to the Events page (our home) -->
+            <a class="navbar-brand fw-bold" asp-page="/Events/Index">@Site.Value.OfficialName</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div id="mainNav" class="collapse navbar-collapse">
                 <ul class="navbar-nav me-auto">
+                    <!-- Link to Events (Razor Pages) -->
                     <li class="nav-item"><a class="nav-link" asp-page="/Events/Index">Events</a></li>
+                    <!-- Link to Classifieds (MVC Controller) -->
                     <li class="nav-item"><a class="nav-link" asp-controller="Classifieds" asp-action="Index">Classifieds</a></li>
+                    <!-- Link to Contact page -->
                     <li class="nav-item"><a class="nav-link" asp-page="/Contact">Contact</a></li>
                 </ul>
             </div>
         </div>
     </nav>
 
+    <!-- Alert partial for showing messages (like success or error) -->
     @await Html.PartialAsync("_Alert")
 
+    <!-- Main content goes here -->
     <div class="container pb-5">
         @RenderBody()
     </div>
 
+    <!-- For page-specific scripts -->
     @RenderSection("Scripts", required: false)
 
+    <!-- Bootstrap JS for interactive components -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

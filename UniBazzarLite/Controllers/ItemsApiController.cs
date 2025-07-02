@@ -7,6 +7,7 @@ using UniBazaarLite.ViewModels;
 
 namespace UniBazaarLite.Controllers
 {
+    // API controller for classifieds (returns JSON)
     [ApiController]
     [Route("api/[controller]")]
     public class ItemsApiController : ControllerBase
@@ -15,10 +16,12 @@ namespace UniBazaarLite.Controllers
         public ItemsApiController(IItemRepository repo) => _repo = repo;
 
         // GET /api/items
+        // Returns all items as JSON
         [HttpGet]
         public IActionResult GetAll() => Ok(_repo.GetAll());
 
         // GET /api/items/{id}
+        // Returns a single item by ID as JSON
         [HttpGet("{id:guid}")]
         public IActionResult Get(Guid id)
         {
@@ -27,11 +30,13 @@ namespace UniBazaarLite.Controllers
         }
 
         // POST /api/items
+        // Adds a new item (expects JSON body)
         [HttpPost]
         public IActionResult Post([FromBody] ClassifiedItemCreateDto dto)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
+            // Create a new item from the DTO and current user
             var item = new ClassifiedItem
             {
                 Title = dto.Title,

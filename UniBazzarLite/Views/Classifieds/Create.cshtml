@@ -24,9 +24,19 @@
         <textarea asp-for="Description" class="form-control" rows="4"></textarea>
     </div>
 
-    <div class="col-md-6">
+    <div class="mb-3">
         <label asp-for="Category" class="form-label"></label>
-        <input asp-for="Category" class="form-control" />
+        <select asp-for="Category" class="form-select">
+            <option value="">-- Select Category --</option>
+            <option>Electronics</option>
+            <option>Books</option>
+            <option>Furniture</option>
+            <option>Appliances</option>
+            <option>Lab Equipment</option>
+            <option>Musical Instruments</option>
+            <option>Other</option>
+        </select>
+        <span asp-validation-for="Category" class="text-danger"></span>
     </div>
 
     <div class="col-12">

@@ -5,6 +5,8 @@
     var currentPage = ViewData["CurrentPage"] as int? ?? 1;
     var totalPages = ViewData["TotalPages"] as int? ?? 1;
     var currentCategory = ViewData["CurrentCat"] as string ?? "";
+    var categories = new[] { "Electronics", "Books", "Furniture", "Appliances", "Lab Equipment", "Musical Instruments", "Other" };
+    var selectedCategory = ViewData["CurrentCat"] as string ?? "";
 }
 
 <h1>Classified Ads</h1>
@@ -12,31 +14,31 @@
 <div class="row mb-3 align-items-center">
     <!-- Filter form (Category) -->
     <div class="col-md-6">
-        <form method="get" class="d-flex flex-wrap align-items-center">
-            <label for="categoryFilter" class="me-2 mb-2 mb-md-0">Category:</label>
-            <select id="categoryFilter" name="category" class="form-select me-2 mb-2 mb-md-0" style="width:auto;">
-                @if (string.IsNullOrEmpty(currentCategory)) {
-                    <option value="" selected>All</option>
-                } else {
-                    <option value="">All</option>
-                }
-                @if (currentCategory == "Electronics") {
-                    <option value="Electronics" selected>Electronics</option>
-                } else {
-                    <option value="Electronics">Electronics</option>
-                }
-                @if (currentCategory == "Books") {
-                    <option value="Books" selected>Books</option>
-                } else {
-                    <option value="Books">Books</option>
-                }
-                @if (currentCategory == "Other") {
-                    <option value="Other" selected>Other</option>
-                } else {
-                    <option value="Other">Other</option>
-                }
-            </select>
-            <button type="submit" class="btn btn-secondary mb-2 mb-md-0">Filter</button>
+        <form method="get" class="mb-3">
+            <div class="row g-2 align-items-end">
+                <div class="col-auto">
+                    <label for="category" class="form-label mb-0">Category:</label>
+                </div>
+                <div class="col-auto">
+                    <select name="category" id="category" class="form-select" onchange="this.form.submit()">
+                        <option value="">All Categories</option>
+                        @foreach (var cat in categories)
+                        {
+                            if (selectedCategory == cat)
+                            {
+                                <option value="@cat" selected="selected">@cat</option>
+                            }
+                            else
+                            {
+                                <option value="@cat">@cat</option>
+                            }
+                        }
+                    </select>
+                </div>
+                <div class="col-auto">
+                    <button type="submit" class="btn btn-outline-primary btn-sm">Filter</button>
+                </div>
+            </div>
         </form>
     </div>
 
