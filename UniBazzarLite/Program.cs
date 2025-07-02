@@ -5,46 +5,50 @@ using UniBazaarLite.ViewModels;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// ----- DI -----
+// ----- Dependency Injection (DI) setup -----
+// Add MVC controllers with global logging filter
 builder.Services.AddControllersWithViews(options =>
 {
-    options.Filters.Add<LogActivityFilter>();         // MVC istekleri
+    options.Filters.Add<LogActivityFilter>(); // For MVC requests
 });
+// Add Razor Pages with global logging filter and custom routing
 builder.Services.AddRazorPages(options =>
 {
-    // kök URL yönlendirmesi
+    // Redirect root URL to events index
     options.Conventions.AddPageRoute("/Events/Index", "/");
 })
-.AddMvcOptions(o =>                     // <--  burada
+.AddMvcOptions(o =>
 {
-    o.Filters.Add<LogActivityFilter>(); // Razor Pages istekleri de dâhil
+    o.Filters.Add<LogActivityFilter>(); // For Razor Pages requests too
 });
-builder.Services.AddUniBazaarRepositories();
+builder.Services.AddUniBazaarRepositories(); // Register our in-memory repositories
 
+// Register filters for DI
 builder.Services.AddScoped<LogActivityFilter>();
 builder.Services.AddScoped<ValidateEventExistsFilter>();
 builder.Services.AddScoped<ValidateItemExistsFilter>();
 
-builder.Services.Configure<SiteOptions>(builder.Configuration.GetSection("Site"));
-
-// basit fake auth
-builder.Services.AddAuthentication("Fake")
-    .AddCookie("Fake", o => o.LoginPath = "/");
-builder.Services.AddAuthorization();
+// Load site options from config
 builder.Services.Configure<SiteOptions>(builder.Configuration.GetSection("Site"));
 
 // Add AdminEmail from User Secrets (final project requirement)
 builder.Configuration.AddUserSecrets<Program>();
 
+// Simulated/fake authentication setup
+builder.Services.AddAuthentication("Fake")
+    .AddCookie("Fake", o => o.LoginPath = "/");
+builder.Services.AddAuthorization();
+builder.Services.Configure<SiteOptions>(builder.Configuration.GetSection("Site"));
+
 var app = builder.Build();
 
-// ----- pipeline -----
-app.UseMiddleware<CurrentUserMiddleware>();
-app.UseStaticFiles();
+// ----- HTTP request pipeline setup -----
+app.UseMiddleware<CurrentUserMiddleware>(); // Simulate a logged-in user
+app.UseStaticFiles(); // Serve static files (css, js, etc.)
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapRazorPages();   // Razor Pages
-app.MapControllers();
+app.MapControllers(); // MVC Controllers
 
 app.Run();

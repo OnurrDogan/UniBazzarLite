@@ -4,36 +4,40 @@ using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 
 namespace UniBazaarLite.Pages;
+
+// Razor Page for the Contact page (static info + contact form)
 public class ContactModel : PageModel
 {
     private readonly IConfiguration _config;
     public string? AdminEmail { get; private set; }
 
+    public ContactModel(IConfiguration config) => _config = config;
+
+    // The contact form data (bound to the form)
     [BindProperty]
     public ContactFormModel ContactForm { get; set; } = new();
 
-    public ContactModel(IConfiguration config) => _config = config;
-
+    // Handles GET requests to /Contact
     public void OnGet()
     {
         AdminEmail = _config["AdminEmail"];
     }
 
+    // Handles POST requests (form submission)
     public IActionResult OnPost()
     {
         if (!ModelState.IsValid)
         {
-            return Page();
+            return Page(); // If validation fails, show form again
         }
 
-        // In a real application, you would send an email here
-        // For now, we'll just show a success message
+        // In a real app, you'd send an email here!
         TempData["Message"] = $"Thank you for your message, {ContactForm.Name}! We'll get back to you at {ContactForm.Email} soon.";
-        
-        return RedirectToPage();
+        return RedirectToPage(); // Show the success message
     }
 }
 
+// Model for the contact form
 public class ContactFormModel
 {
     [Required(ErrorMessage = "Name is required")]
